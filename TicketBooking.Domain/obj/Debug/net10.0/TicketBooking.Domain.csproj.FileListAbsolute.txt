@@ -1,0 +1,11 @@
+E:\Dev\TicketBooking\TicketBooking.Domain\bin\Debug\net10.0\TicketBooking.Domain.deps.json
+E:\Dev\TicketBooking\TicketBooking.Domain\bin\Debug\net10.0\TicketBooking.Domain.dll
+E:\Dev\TicketBooking\TicketBooking.Domain\bin\Debug\net10.0\TicketBooking.Domain.pdb
+E:\Dev\TicketBooking\TicketBooking.Domain\obj\Debug\net10.0\TicketBooking.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\Dev\TicketBooking\TicketBooking.Domain\obj\Debug\net10.0\TicketBooking.Domain.AssemblyInfoInputs.cache
+E:\Dev\TicketBooking\TicketBooking.Domain\obj\Debug\net10.0\TicketBooking.Domain.AssemblyInfo.cs
+E:\Dev\TicketBooking\TicketBooking.Domain\obj\Debug\net10.0\TicketBooking.Domain.csproj.CoreCompileInputs.cache
+E:\Dev\TicketBooking\TicketBooking.Domain\obj\Debug\net10.0\TicketBooking.Domain.dll
+E:\Dev\TicketBooking\TicketBooking.Domain\obj\Debug\net10.0\refint\TicketBooking.Domain.dll
+E:\Dev\TicketBooking\TicketBooking.Domain\obj\Debug\net10.0\TicketBooking.Domain.pdb
+E:\Dev\TicketBooking\TicketBooking.Domain\obj\Debug\net10.0\ref\TicketBooking.Domain.dll
