@@ -8,7 +8,7 @@ public class Seat
 
     public Seat(string name)
     {
-        Id = new Guid();
+        Id = Guid.NewGuid();
         Name = name;
         Status = ESeatStatus.Available;
     }
