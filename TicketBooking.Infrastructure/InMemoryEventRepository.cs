@@ -12,6 +12,8 @@ public class InMemoryEventRepository : IEventRepository
         _events[seed.Id] = seed;
     }
     
+    public async Task<IEnumerable<Event>> GetAllAsync()  => Task.FromResult(_events);
+
     public Task<Event?> GetByIdAsync(Guid id)
         => Task.FromResult(_events.TryGetValue(id, out var evt) ? evt : null);
 
@@ -21,9 +23,5 @@ public class InMemoryEventRepository : IEventRepository
         return Task.FromResult(evt);
     }
 
-    public async Task<Event> UpdateAsync(Event evt)
-    {
-        _events[evt.Id] = evt;
-        return evt;
-    }
+    public Task<Event> UpdateAsync(Event evt) => Task.FromResult(_events[evt.Id]);
 }

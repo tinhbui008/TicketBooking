@@ -9,8 +9,5 @@ public class InMemoryBookingRepository : IBookingRepository
 
     public Task<Booking?> GetByIdAsync(Guid id) => Task.FromResult(_bookings.TryGetValue(id, out var booking) ? booking : null);
 
-    public async Task<Booking> AddAsync(Booking booking)
-    {
-        return _bookings[booking.Id] = booking;
-    }
+    public Task<Booking> AddAsync(Booking booking) => Task.FromResult(_bookings[booking.Id] = booking);
 }
