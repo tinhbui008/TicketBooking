@@ -25,9 +25,8 @@ public class Booking
     
     public void Expire()
     {
-        if (Status == EBookingStatus.SeatHeld)
-        {
-            Status = EBookingStatus.Expired;
-        }
+        if (Status != EBookingStatus.SeatHeld)
+            throw new InvalidOperationException($"Cannot expire booking in status {Status}");
+        Status = EBookingStatus.Expired;
     }
 }
