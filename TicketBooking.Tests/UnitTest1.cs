@@ -44,6 +44,8 @@ public class UnitTest1
     {
         var booking = new Booking(Guid.NewGuid(), "A1");
         booking.Confirm();
+        
+        Assert.Equal(EBookingStatus.Confirmed, booking.Status);
     }
     
     [Fact]
