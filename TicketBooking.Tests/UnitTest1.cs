@@ -10,6 +10,6 @@ public class UnitTest1
         var evt = new Event("Concert-01",  new []{ "A1"});
         evt.HoldSeat("A1");
         
-        Assert.Throws<InvalidOperationException>(() => evt.HoldSeat("A"));
+        Assert.Throws<InvalidOperationException>(() => evt.HoldSeat("A1"));
     }
 }
