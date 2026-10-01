@@ -5,15 +5,12 @@ namespace TicketBooking.Infrastructure;
 
 public class InMemoryBookingRepository : IBookingRepository
 {
-    private readonly Dictionary<Guid, Booking> _events = new();
-    
-    public async Task<Booking> GetByIdAsync(Guid id)
-    {
-        return _events.ContainsKey(id) ? _events[id] : null;
-    }
+    private readonly Dictionary<Guid, Booking> _bookings = new();
+
+    public Task<Booking?> GetByIdAsync(Guid id) => Task.FromResult(_bookings.TryGetValue(id, out var booking) ? booking : null);
 
     public async Task<Booking> AddAsync(Booking booking)
     {
-        return _events[booking.Id] = booking;
+        return _bookings[booking.Id] = booking;
     }
 }

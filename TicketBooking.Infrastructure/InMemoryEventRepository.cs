@@ -6,16 +6,19 @@ namespace TicketBooking.Infrastructure;
 public class InMemoryEventRepository : IEventRepository
 {
     private readonly  Dictionary<Guid, Event> _events = new Dictionary<Guid, Event>();
-    
-    public async Task<Event> GetByIdAsync(Guid id)
+    public InMemoryEventRepository()
     {
-        return _events.ContainsKey(id) ? _events[id] : null;
+        var seed = new Event("Concert-01", new[] { "A1", "A2", "A3", "A4", "A5" });
+        _events[seed.Id] = seed;
     }
+    
+    public Task<Event?> GetByIdAsync(Guid id)
+        => Task.FromResult(_events.TryGetValue(id, out var evt) ? evt : null);
 
-    public async Task<Event> AddAsync(Event evt)
+    public Task<Event> AddAsync(Event evt)
     {
         _events.Add(evt.Id, evt);
-        return evt;
+        return Task.FromResult(evt);
     }
 
     public async Task<Event> UpdateAsync(Event evt)
