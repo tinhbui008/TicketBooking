@@ -35,6 +35,32 @@ public class UnitTest1
     [Fact]
     public void NewBooking_ShouldBe_SeatHeld()
     {
-        var evt = new Booking(Guid.NewGuid(), "A1");
+        var booking = new Booking(Guid.NewGuid(), "A1");
+        Assert.Equal(EBookingStatus.SeatHeld, booking.Status);
+    }
+
+    [Fact]
+    public void Confirm_FromSeatHeld_ShouldBeConfirmed()
+    {
+        var booking = new Booking(Guid.NewGuid(), "A1");
+        booking.Confirm();
+    }
+    
+    [Fact]
+    public void Confirm_WhenAlreadyConfirmed_ShouldThrow()
+    {
+        var booking = new Booking(Guid.NewGuid(), "A1");
+        booking.Confirm();
+        
+        Assert.Throws<InvalidOperationException>(() => booking.Confirm());
+    }
+
+    [Fact]
+    public void Expire_WhenConfirmed_ShouldThrow()
+    {
+        var booking = new Booking(Guid.NewGuid(), "A1");
+        booking.Confirm();
+        
+        Assert.Throws<InvalidOperationException>(() => booking.Expire());
     }
 }
