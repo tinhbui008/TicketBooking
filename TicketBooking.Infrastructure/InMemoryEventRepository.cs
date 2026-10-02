@@ -15,8 +15,7 @@ public class InMemoryEventRepository : IEventRepository
     
     public Task<IEnumerable<Event>> GetAllAsync() => Task.FromResult<IEnumerable<Event>>(_events.Values);
 
-    public Task<Event?> GetByIdAsync(Guid id)
-        => Task.FromResult(_events.TryGetValue(id, out var evt) ? evt : null);
+    public Task<Event?> GetByIdAsync(Guid id) => Task.FromResult(_events.TryGetValue(id, out var evt) ? evt : null);
 
     public Task<Event> AddAsync(Event evt)
     {

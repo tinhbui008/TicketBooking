@@ -6,52 +6,60 @@ namespace TicketBooking.Tests;
 public class EventTests
 {
     [Fact]
-    public void HoldSeat_AlreadyHeld_ShouldThrow()
+    public void EnsureSeatCanBeHeld_AvailableSeat_ShouldNotThrow()
     {
         var evt = new Event("Concert-01", new[] { "A1" });
-        evt.HoldSeat("A1");
 
-        Assert.Throws<SeatNotAvailableException>(() => evt.HoldSeat("A1"));
+        var exception = Record.Exception(() => evt.EnsureSeatCanBeHeld("A1"));
+
+        Assert.Null(exception);
     }
 
     [Fact]
-    public void HoldSeat_AvailableSeat_ShouldBecomeHeld()
+    public void EnsureSeatCanBeHeld_ShouldNotChangeSeatStatus()
     {
         var evt = new Event("Concert-01", new[] { "A1" });
-        evt.HoldSeat("A1");
+
+        evt.EnsureSeatCanBeHeld("A1");
+        evt.EnsureSeatCanBeHeld("A1");
 
         var seat = evt.Seats.Single(s => s.Name == "A1");
-
-        Assert.Equal(ESeatStatus.Held, seat.Status);
+        Assert.Equal(ESeatStatus.Available, seat.Status);
     }
 
     [Fact]
-    public void HoldSeat_ShouldNotAffectOtherSeats()
+    public void EnsureSeatCanBeHeld_BookedSeat_ShouldThrow()
     {
-        var evt = new Event("Concert-01", new[] { "A1", "A2" });
-        evt.HoldSeat("A1");
+        var evt = new Event("Concert-01", new[] { "A1" });
+        evt.Seats.Single(s => s.Name == "A1").Book();
 
-        var other = evt.Seats.Single(s => s.Name == "A2");
-
-        Assert.Equal(ESeatStatus.Available, other.Status);
+        Assert.Throws<SeatNotAvailableException>(() => evt.EnsureSeatCanBeHeld("A1"));
     }
 
     [Fact]
-    public void HoldSeat_SeatNotExist_ShouldThrow()
+    public void EnsureSeatCanBeHeld_SeatNotExist_ShouldThrow()
     {
         var evt = new Event("Concert-01", new[] { "A1" });
 
-        Assert.Throws<SeatNotFoundException>(() => evt.HoldSeat("Z9"));
+        Assert.Throws<SeatNotFoundException>(() => evt.EnsureSeatCanBeHeld("Z9"));
     }
 
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
-    public void HoldSeat_EmptySeatName_ShouldThrow(string seatName)
+    public void EnsureSeatCanBeHeld_EmptySeatName_ShouldThrow(string seatName)
     {
         var evt = new Event("Concert-01", new[] { "A1" });
 
-        Assert.Throws<ArgumentException>(() => evt.HoldSeat(seatName));
+        Assert.Throws<ArgumentException>(() => evt.EnsureSeatCanBeHeld(seatName));
+    }
+
+    [Fact]
+    public void NewEvent_AllSeatsShouldBeAvailable()
+    {
+        var evt = new Event("Concert-01", new[] { "A1", "A2" });
+
+        Assert.All(evt.Seats, seat => Assert.Equal(ESeatStatus.Available, seat.Status));
     }
 
     [Fact]
@@ -76,27 +84,5 @@ public class EventTests
     public void NewEvent_EmptyName_ShouldThrow()
     {
         Assert.Throws<ArgumentException>(() => new Event("", new[] { "A1" }));
-    }
-
-    [Fact(Skip = "Race condition đã biết ở HoldSeat (check-then-act), giải quyết ở Phase 2")]
-    public async Task HoldSeat_Concurrent_OnlyOneShouldSucceed()
-    {
-        var evt = new Event("Concert-01", new[] { "A1" });
-
-        var attempts = Enumerable.Range(0, 100).Select(_ => Task.Run(() =>
-        {
-            try
-            {
-                evt.HoldSeat("A1");
-                return true;
-            }
-            catch (SeatNotAvailableException)
-            {
-                return false;
-            }
-        }));
-        var results = await Task.WhenAll(attempts);
-
-        Assert.Single(results, succeeded => succeeded);
     }
 }

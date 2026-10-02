@@ -11,7 +11,7 @@ public class BookingService(IEventRepository eventRepository, IBookingRepository
         if (evt == null)
             throw new EventNotFoundException(eventId);
         
-        evt.HoldSeat(seatName);
+        evt.EnsureSeatCanBeHeld(seatName);
         await eventRepository.UpdateAsync(evt);
         var booking = new Booking(eventId, seatName);
         return await bookingRepository.AddAsync(booking);

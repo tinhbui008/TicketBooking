@@ -27,7 +27,7 @@ public class Event
         _seats = names.Select(seatName => new Seat(seatName)).ToList();
     }
 
-    public void HoldSeat(string seatName)
+    public void EnsureSeatCanBeHeld(string seatName)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(seatName);
 
@@ -42,6 +42,6 @@ public class Event
             throw new SeatNotAvailableException(seatName, seat.Status);
         }
 
-        seat.Hold();
+        // seat.Hold();
     }
 }
