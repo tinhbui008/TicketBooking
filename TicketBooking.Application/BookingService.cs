@@ -1,14 +1,15 @@
 using TicketBooking.Domain;
+using TicketBooking.Domain.Exceptions;
 
 namespace TicketBooking.Application;
 
 public class BookingService(IEventRepository eventRepository, IBookingRepository bookingRepository)
 {
-    public async Task<Booking> Create(Guid eventId, string seatName)
+    public async Task<Booking> CreateAsync(Guid eventId, string seatName)
     {
         var evt = await eventRepository.GetByIdAsync(eventId);
         if (evt == null)
-            throw new KeyNotFoundException($"Event {eventId} does not exist");
+            throw new EventNotFoundException(eventId);
         
         evt.HoldSeat(seatName);
         await eventRepository.UpdateAsync(evt);

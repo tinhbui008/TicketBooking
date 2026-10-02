@@ -1,36 +1,47 @@
+using TicketBooking.Domain.Exceptions;
+
 namespace TicketBooking.Domain;
 
 public class Event
 {
-    public Guid Id { get; private set; }
-    public string Name { get; private set; }
+    public Guid Id { get; }
+    public string Name { get; }
     public IReadOnlyCollection<Seat> Seats => _seats;
     private readonly List<Seat> _seats;
 
     public Event(string name, IEnumerable<string> seatNames)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentNullException.ThrowIfNull(seatNames);
+
+        var names = seatNames.ToList();
+        if (names.Count == 0)
+            throw new ArgumentException("Event must have at least one seat", nameof(seatNames));
+        if (names.Any(string.IsNullOrWhiteSpace))
+            throw new ArgumentException("Seat name must not be empty", nameof(seatNames));
+        if (names.Distinct().Count() != names.Count)
+            throw new ArgumentException("Seat names must be unique", nameof(seatNames));
+
         Id = Guid.NewGuid();
         Name = name;
-        _seats = seatNames.Select(name => new Seat(name)).ToList();
+        _seats = names.Select(seatName => new Seat(seatName)).ToList();
     }
 
     public void HoldSeat(string seatName)
     {
-        if (string.IsNullOrEmpty(seatName))
+        ArgumentException.ThrowIfNullOrWhiteSpace(seatName);
+
+        var seat = _seats.FirstOrDefault(s => s.Name == seatName);
+        if (seat == null)
         {
-            throw new ArgumentNullException(nameof(seatName));
+            throw new SeatNotFoundException(seatName);
         }
-       var seat = _seats.FirstOrDefault(s => s.Name == seatName);
-       if (seat == null)
-       {
-           throw new KeyNotFoundException($"Seat with name {seatName} does not exist");
-       }
-       
-       if (seat.Status != ESeatStatus.Available)
-       {
-           throw new InvalidOperationException($"Seat  with name {seatName} is holding");
-       }
-       
-       seat.Hold();
+
+        if (seat.Status != ESeatStatus.Available)
+        {
+            throw new SeatNotAvailableException(seatName, seat.Status);
+        }
+
+        seat.Hold();
     }
 }

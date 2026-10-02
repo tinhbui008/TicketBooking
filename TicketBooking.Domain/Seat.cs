@@ -3,7 +3,7 @@ namespace TicketBooking.Domain;
 public class Seat
 {
     public Guid Id { get; }
-    public string Name { get; private set; }
+    public string Name { get; }
     public ESeatStatus Status { get; private set; }
 
     public Seat(string name)

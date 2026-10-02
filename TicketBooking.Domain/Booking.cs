@@ -2,13 +2,17 @@ namespace TicketBooking.Domain;
 
 public class Booking
 {
-    public Guid Id { get; private set; }
-    public Guid EventId { get; private set; }
-    public string SeatName { get; private set; }
+    public Guid Id { get; }
+    public Guid EventId { get; }
+    public string SeatName { get; }
     public EBookingStatus Status { get; private set; }
 
     public Booking(Guid eventId, string seatName)
     {
+        if (eventId == Guid.Empty)
+            throw new ArgumentException("EventId cannot be empty", nameof(eventId));
+        ArgumentException.ThrowIfNullOrWhiteSpace(seatName);
+
         Id = Guid.NewGuid();
         EventId = eventId;
         SeatName = seatName;

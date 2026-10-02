@@ -1,11 +1,12 @@
 using TicketBooking.Application;
 using TicketBooking.Domain;
+using System.Collections.Concurrent;
 
 namespace TicketBooking.Infrastructure;
 
 public class InMemoryEventRepository : IEventRepository
 {
-    private readonly  Dictionary<Guid, Event> _events = new Dictionary<Guid, Event>();
+    private readonly ConcurrentDictionary<Guid, Event> _events = new();
     public InMemoryEventRepository()
     {
         var seed = new Event("Concert-01", new[] { "A1", "A2", "A3", "A4", "A5" });
@@ -19,7 +20,8 @@ public class InMemoryEventRepository : IEventRepository
 
     public Task<Event> AddAsync(Event evt)
     {
-        _events.Add(evt.Id, evt);
+        if (!_events.TryAdd(evt.Id, evt))
+            throw new InvalidOperationException($"Event {evt.Id} already exists");
         return Task.FromResult(evt);
     }
 
